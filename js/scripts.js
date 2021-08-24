@@ -49,6 +49,7 @@ Contact.prototype.addEmailAddress = function(emailAddressType,emailAddress) {
   this.tryingEmailAddresses[emailAddressType] = emailAddress;
 };
 
+
 // User Interface Logic ---------
 let addressBook = new AddressBook();
 
@@ -73,7 +74,7 @@ function showContact(contactId) {
   const addressKeys = Object.keys(contact.tryingAddresses);
   let addressString = "";
   addressKeys.forEach(function(key) {
-    addressString = addressString.concat(key + ": " + contact.tryingAddresses[key] + "\n");
+    addressString = addressString.concat(key + ": " + contact.tryingAddresses[key] + "\n" + "<br\>");
   });
   $(".address").html(addressString);
 
@@ -87,6 +88,7 @@ function showContact(contactId) {
   let buttons = $("#buttons");
   buttons.empty();
   buttons.append("<button class='deleteButton' id=" +  + contact.id + ">Delete</button>");
+  buttons.append("<button class='addAddressButton' id=" + contact.id + ">Add Address</button>");
 }
 
 function attachContactListeners() {
@@ -97,6 +99,16 @@ function attachContactListeners() {
   $("#buttons").on("click", ".deleteButton", function() {
     addressBook.deleteContact(this.id);
     $("#show-contact").hide();
+    displayContactDetails(addressBook);
+  });
+
+  $("#buttons").on("click",".addAddressButton", function() {
+    const newInputtedAddressType = $("#new-address-type").val();
+    const newInputtedAddress = $("input#new-address").val();
+    const contact = addressBook.findContact(this.id);
+    contact.addAddress(newInputtedAddressType,newInputtedAddress);
+    console.log(contact); 
+    showContact(this.id); 
     displayContactDetails(addressBook);
   });
 }
